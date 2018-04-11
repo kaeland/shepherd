@@ -1,7 +1,6 @@
 # dependencies
 /node_modules
 
-src/firebase/
 
 dist/bundle.js
 dist/bundle.js.map

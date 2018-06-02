@@ -80,10 +80,6 @@ class ChurchesPage extends React.Component {
     return churchList;
   }
 
-  renderHello() {
-    return <div><p>Hi there</p></div>
-  }
-
   render() {
     const { push } = this.props.history;
 
@@ -92,7 +88,7 @@ class ChurchesPage extends React.Component {
       <Grid>
         {/* Row */}
         <Grid.Row centered={true}>
-          <Grid.Column width={14}>
+          <Grid.Column width={14} computer={12} widescreen={8}>
             <Message color="blue">
               {_.isEmpty(this.state.churches)
                 ? (
@@ -109,14 +105,14 @@ class ChurchesPage extends React.Component {
 
         {/* Row */}
         <Grid.Row centered={true}>
-          <Grid.Column width={14}>
+          <Grid.Column width={14} computer={12} widescreen={8}>
             <Button primary floated="right" onClick={(e) => push(`/add/church`)}>Add</Button>
           </Grid.Column>
         </Grid.Row>
 
         {/* Row */}
         <Grid.Row centered={true}>
-          <Grid.Column width={14}>
+          <Grid.Column width={14} computer={12} widescreen={8}>
             {this.renderChurches()}
           </Grid.Column>
         </Grid.Row>

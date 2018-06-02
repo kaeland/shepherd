@@ -1,9 +1,10 @@
-import React from 'react'
+import React from 'react';
 import {
   Grid, Message, Button,
   Segment, Container, Header,
   Form
 } from 'semantic-ui-react';
+import ChurchForm from '../common/ChurchForm';
 import database from '../../firebase/firebase';
 
 export default class AddChurchPage extends React.Component {
@@ -16,8 +17,8 @@ export default class AddChurchPage extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(e) {
-    this.setState({ church: e.target.value });
+  handleChange(church) {
+    this.setState({ church });
   }
 
   handleSubmit(e) {
@@ -33,13 +34,13 @@ export default class AddChurchPage extends React.Component {
 
   render() {
     console.log(this.state, 'state', this.props, 'props', 'AddChurchPage');
-
+    
     return (
       <Grid>
 
         {/* Row */}
         <Grid.Row centered={true}>
-          <Grid.Column width={14}>
+          <Grid.Column width={14} computer={12} widescreen={8}>
             <Message color="blue">
               <p>Add a church below...</p>
             </Message>
@@ -48,14 +49,12 @@ export default class AddChurchPage extends React.Component {
 
         {/* Row */}
         <Grid.Row centered={true}>
-          <Grid.Column width={14}>
-            <Form onSubmit={this.handleSubmit}>
-              <Form.Field>
-                <label>Church</label>
-                <input placeholder="Church's Name" type="text" value={this.state.church} onChange={this.handleChange}/>
-              </Form.Field>
-              <Button type="submit" primary>Add</Button>
-            </Form>
+          <Grid.Column width={14} computer={12} widescreen={8}>
+            <ChurchForm
+              church={this.state.church}
+              onChurchNameChange={this.handleChange}
+              onChurchNameSubmit={this.handleSubmit}
+            />
           </Grid.Column>
         </Grid.Row>
 

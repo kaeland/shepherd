@@ -49,7 +49,7 @@ export default class EditChurchPage extends React.Component {
 
         {/* Row */}
         <Grid.Row centered={true}>
-          <Grid.Column width={14}>
+          <Grid.Column width={14} computer={12} widescreen={8}>
             <Message color="blue">
               <p>Edit a church below...</p>
             </Message>
@@ -58,7 +58,7 @@ export default class EditChurchPage extends React.Component {
 
         {/* Row */}
         <Grid.Row centered={true}>
-          <Grid.Column width={14}>
+          <Grid.Column width={14} computer={12} widescreen={8}>
             <Form onSubmit={this.handleSubmit}>
               <Form.Field>
                 <label>Church</label>

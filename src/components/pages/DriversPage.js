@@ -96,7 +96,14 @@ class DriversPage extends React.Component {
     const { push } = this.props.history;
     const { width } = this.props.size;
     const driversList = this.state.drivers.map(({
-      id, firstName, lastName, riders = undefined, seatsAvailable = undefined
+      id, 
+      firstName, 
+      lastName, 
+      riders = undefined, 
+      seatsAvailable = undefined, 
+      make = undefined, 
+      model = undefined, 
+      color = undefined
     }, index) => {
 
       const ridersArray = []
@@ -144,6 +151,9 @@ class DriversPage extends React.Component {
 
               <Transition visible={this.state.showRiders || this.state.showAll} transitionOnMount unmountOnHide animation='slide down' duration={500}>
                 <Segment>
+                  { (make && model && color) &&  
+                    <p><i>{firstName} drives a {color} {make} {model}</i></p>
+                  }
                   <p>Seats Left: {seatsAvailable}</p>
                   <p>Riders: {_.isEmpty(ridersArray) ? "There are no riders" : this.renderRiders(ridersArray, church_id, id)}</p>
                 </Segment>
@@ -177,7 +187,7 @@ class DriversPage extends React.Component {
 
         {/* Row */}
         <Grid.Row centered={true}>
-          <Grid.Column width={14}>
+          <Grid.Column width={14} computer={12} widescreen={8}>
             <Message color="blue">
               <div style={{ overflow: 'auto' }}>
                 {_.isEmpty(this.state.drivers)
@@ -198,9 +208,9 @@ class DriversPage extends React.Component {
 
         {/* Row */}
         <Grid.Row centered={true}>
-          <Grid.Column width={14}>
+          <Grid.Column width={14} computer={12} widescreen={8}>
             <Button floated="right" onClick={() => this.setState({ showAll: !this.state.showAll })}>
-              {this.state.showAll === false ? 'Show All Riders' : 'Unshow Riders'}
+              {this.state.showAll === false ? 'Show All Riders' : 'Hide Riders'}
             </Button>
             <Button floated="right" primary onClick={(e) => push(`/drivers/${church_id}/add`)}>Add Driver</Button>
           </Grid.Column>
@@ -208,7 +218,7 @@ class DriversPage extends React.Component {
 
         {/* Row */}
         <Grid.Row centered={true}>
-          <Grid.Column width={14}>
+          <Grid.Column width={14} computer={12} widescreen={8}>
             {this.renderDrivers()}
           </Grid.Column>
         </Grid.Row>

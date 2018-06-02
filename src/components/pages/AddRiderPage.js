@@ -11,11 +11,13 @@ class AddRiderPage extends React.Component {
     super(props);
     this.state = {
       firstName: '',
-      lastName: ''
+      lastName: '',
+      location: ''
     };
     
     this.onFirstNameChange = this.onFirstNameChange.bind(this);
     this.onLastNameChange = this.onLastNameChange.bind(this);
+    this.onLocationChange = this.onLocationChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -29,17 +31,22 @@ class AddRiderPage extends React.Component {
     this.setState(() => ({ lastName }));
   }
 
+  onLocationChange(e) {
+    const location = e.target.value;
+    this.setState(() => ({ location }));
+  }
+
   handleSubmit(e) {
     e.preventDefault();
-    const church_id = this.props.match.params.church_id;
-    const driver_id = this.props.match.params.driver_id;
+    const { church_id, driver_id } = this.props.match.params;
     const driversSeatsString = `churches/${church_id}/drivers/${driver_id}/seatsAvailable`;
     const driversSeatsRef = database.ref(driversSeatsString);
     const ridersRefString = `churches/${church_id}/drivers/${driver_id}/riders`;  
     const ridersRef = database.ref(ridersRefString);
     const rider = {
       firstName: this.state.firstName.trim(),
-      lastName: this.state.lastName.trim()
+      lastName: this.state.lastName.trim(),
+      location: this.state.location.trim()
     };
     driversSeatsRef.transaction((currentSeatsAvailable) => {
       if (currentSeatsAvailable > 0) {
@@ -49,7 +56,8 @@ class AddRiderPage extends React.Component {
     });
     this.setState(() => ({
       firstName: '',
-      lastName: ''
+      lastName: '',
+      location: ''
     }));
     this.props.history.push(`/drivers/${church_id}`);
   }
@@ -60,7 +68,7 @@ class AddRiderPage extends React.Component {
 
         {/* Row */}
         <Grid.Row centered={true}>
-          <Grid.Column width={14}>
+          <Grid.Column width={14} computer={12} widescreen={8}>
             <Message color="blue">
               <p>Add a rider below...</p>
             </Message>
@@ -69,7 +77,7 @@ class AddRiderPage extends React.Component {
 
         {/* Row */}
         <Grid.Row centered={true}>
-          <Grid.Column width={14}>
+          <Grid.Column width={14} computer={12} widescreen={8}>
             <Form onSubmit={this.handleSubmit}> 
 
               <Form.Field>
@@ -80,6 +88,11 @@ class AddRiderPage extends React.Component {
               <Form.Field>
                 <label>Last Name</label>
                 <input placeholder="Last Name" type="text" value={this.state.lastName} onChange={this.onLastNameChange} />
+              </Form.Field>
+
+              <Form.Field>
+                <label>Pickup Location</label>
+                <input placeholder="Student Center, Starbucks, etc..." type="text" value={this.state.location} onChange={this.onLocationChange} />
               </Form.Field>
 
               <Button type="submit" primary>Add</Button>

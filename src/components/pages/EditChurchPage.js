@@ -4,6 +4,7 @@ import {
   Segment, Container, Header,
   Form
 } from 'semantic-ui-react';
+import AppGrid from './AppGrid';
 import database from '../../firebase/firebase';
 
 export default class EditChurchPage extends React.Component {
@@ -41,35 +42,29 @@ export default class EditChurchPage extends React.Component {
     });
   }
 
-  render() {
-    console.log(this.state, 'state', this.props, 'props', 'EditChurchPage');
-
+  renderForm() {
     return (
-      <Grid>
+      <Form onSubmit={this.handleSubmit}>
+        <Form.Field>
+          <label>Church</label>
+          <input 
+            placeholder="Church's Name" 
+            type="text" 
+            value={this.state.church} 
+            onChange={this.handleChange} 
+          />
+        </Form.Field>
+        <Button type="submit" primary>Add</Button>
+      </Form>
+    );
+  }
 
-        {/* Row */}
-        <Grid.Row centered={true}>
-          <Grid.Column width={14} computer={12} widescreen={8}>
-            <Message color="blue">
-              <p>Edit a church below...</p>
-            </Message>
-          </Grid.Column>
-        </Grid.Row>
-
-        {/* Row */}
-        <Grid.Row centered={true}>
-          <Grid.Column width={14} computer={12} widescreen={8}>
-            <Form onSubmit={this.handleSubmit}>
-              <Form.Field>
-                <label>Church</label>
-                <input placeholder="Church's Name" type="text" value={this.state.church} onChange={this.handleChange} />
-              </Form.Field>
-              <Button type="submit" primary>Add</Button>
-            </Form>
-          </Grid.Column>
-        </Grid.Row>
-
-      </Grid>
+  render() {
+    console.log('state:', this.state, 'props:', this.props, 'EditChurchPage');
+    const message = <p>Edit a church below...</p>;
+    const body = this.renderForm();
+    return (
+      <AppGrid message={message} body={body} />
     );
   };
 };

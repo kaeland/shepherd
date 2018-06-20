@@ -1,9 +1,10 @@
 import React from 'react';
 import {
-  Grid, Message, Button,
-  Segment, Container, Header,
-  Form, Confirm
+  Button,
+  Form,
+  Confirm
 } from 'semantic-ui-react';
+import AppGrid from './AppGrid';
 import database from '../../firebase/firebase';
 
 class EditRiderPage extends React.Component {
@@ -82,62 +83,59 @@ class EditRiderPage extends React.Component {
       const { firstName, lastName, location } = snapshot.val();
       this.setState(() => ({
         firstName,
-        lastName, 
+        lastName,
         location
       }));
     });
   }
 
-  render() {
-    const { open, firstName, lastName, location } = this.state;
-
+  renderConfirm() {
+    const { firstName, open } = this.state;
     return (
-      <Grid>
-      
-        {/*Confirm deletion of the rider*/}
-        <Confirm
-          open={open}
-          onCancel={this.handleCancel}
-          onConfirm={this.handleConfirm}
-          content={`Are you sure you want to delete ${firstName}?`}
-        />
+      <Confirm
+        open={open}
+        onCancel={this.handleCancel}
+        onConfirm={this.handleConfirm}
+        content={`Are you sure you want to delete ${firstName}?`}
+      />
+    );
+  }
 
-        {/* Row */}
-        <Grid.Row centered={true}>
-          <Grid.Column width={14} computer={12} widescreen={8}>
-            <Message color="blue">
-              <p>Edit a rider below...</p>
-            </Message>
-          </Grid.Column>
-        </Grid.Row>
+  renderForm() {
+    const { firstName, lastName, location } = this.state;
+    return (
+      <Form onSubmit={this.handleSubmit}>
+        <Form.Field>
+          <label>First Name</label>
+          <input placeholder="First Name" type="text" value={firstName} onChange={this.onFirstNameChange} />
+        </Form.Field>
 
-        {/* Row */}
-        <Grid.Row centered={true}>
-          <Grid.Column width={14} computer={12} widescreen={8}>
-            <Form onSubmit={this.handleSubmit}>
+        <Form.Field>
+          <label>Last Name</label>
+          <input placeholder="Last Name" type="text" value={lastName} onChange={this.onLastNameChange} />
+        </Form.Field>
 
-              <Form.Field>
-                <label>First Name</label>
-                <input placeholder="First Name" type="text" value={firstName} onChange={this.onFirstNameChange} />
-              </Form.Field>
+        <Form.Field>
+          <label>Pickup Location</label>
+          <input placeholder="Student Center, Starbucks, etc..." type="text" value={location} onChange={this.onLocationChange} />
+        </Form.Field>
 
-              <Form.Field>
-                <label>Last Name</label>
-                <input placeholder="Last Name" type="text" value={lastName} onChange={this.onLastNameChange} />
-              </Form.Field>
+        <Button type="submit" primary>Add</Button>
+        <Button type="button" color="red" onClick={this.show}>Delete Rider</Button>
+      </Form>
+    );
+  }
 
-              <Form.Field>
-                <label>Pickup Location</label>
-                <input placeholder="Student Center, Starbucks, etc..." type="text" value={this.state.location} onChange={this.onLocationChange} />
-              </Form.Field>
-
-              <Button type="submit" primary>Add</Button>
-              <Button type="button" color="red" onClick={this.show}>Delete Rider</Button>
-            </Form>
-          </Grid.Column>
-        </Grid.Row>
-
-      </Grid>
+  render() {
+    const message = <p>Edit a rider below...</p>;
+    const confirm = this.renderConfirm();
+    const body = this.renderForm();
+    return (
+      <AppGrid 
+        confirm={confirm}
+        message={message}
+        body={body}
+      />
     );
   }
 }

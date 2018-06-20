@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Grid, Message, Button,
-  Segment, Container, Header,
-  Transition, Confirm
+  Button,
+  Segment, 
+  Transition, 
+  Confirm
 } from 'semantic-ui-react';
+import AppGrid from './AppGrid';
 import sizeMe from 'react-sizeme';
 import database from '../../firebase/firebase';
 import _ from 'lodash';
@@ -96,13 +98,13 @@ class DriversPage extends React.Component {
     const { push } = this.props.history;
     const { width } = this.props.size;
     const driversList = this.state.drivers.map(({
-      id, 
-      firstName, 
-      lastName, 
-      riders = undefined, 
-      seatsAvailable = undefined, 
-      make = undefined, 
-      model = undefined, 
+      id,
+      firstName,
+      lastName,
+      riders = undefined,
+      seatsAvailable = undefined,
+      make = undefined,
+      model = undefined,
       color = undefined
     }, index) => {
 
@@ -151,7 +153,7 @@ class DriversPage extends React.Component {
 
               <Transition visible={this.state.showRiders || this.state.showAll} transitionOnMount unmountOnHide animation='slide down' duration={500}>
                 <Segment>
-                  { (make && model && color) &&  
+                  {(make && model && color) &&
                     <p><i>{firstName} drives a {color} {make} {model}</i></p>
                   }
                   <p>Seats Left: {seatsAvailable}</p>
@@ -169,107 +171,80 @@ class DriversPage extends React.Component {
     return driversList;
   }
 
-  render() {
-    // console.log('state:', this.state, 'props:', this.props, 'DriversPage');
-    const { push } = this.props.history;
-    const { church_id } = this.props.match.params;
-    const { churchName = undefined } = this.state;
+  renderMessage() {
+    const { churchName = undefined, drivers } = this.state;
     return (
-      <Grid>
-
-        {/*Confirm deletion of a driver*/}
-        <Confirm
-          open={this.state.open}
-          onCancel={this.handleCancel}
-          onConfirm={this.handleConfirm}
-          content={`Are you sure you want to delete ${this.state.firstName}?`}
-        />
-
-        {/* Row */}
-        <Grid.Row centered={true}>
-          <Grid.Column width={14} computer={12} widescreen={8}>
-            <Message color="blue">
-              <div style={{ overflow: 'auto' }}>
-                {_.isEmpty(this.state.drivers)
-                  ? (
-                    <p>
-                      Whoa! It looks like there are no drivers headed to {churchName ? churchName : 'a church'} this week.
-                      Add a new driver if you'd like.
-                  </p>
-                  )
-                  : (
-                    <p>Add to, or edit the list of drivers headed to {churchName ? churchName : 'a church'} this week.</p>
-                  )
-                }
-              </div>
-            </Message>
-          </Grid.Column>
-        </Grid.Row>
-
-        {/* Row */}
-        <Grid.Row centered={true}>
-          <Grid.Column width={14} computer={12} widescreen={8}>
-            <Button floated="right" onClick={() => this.setState({ showAll: !this.state.showAll })}>
-              {this.state.showAll === false ? 'Show All Riders' : 'Hide Riders'}
-            </Button>
-            <Button floated="right" primary onClick={(e) => push(`/drivers/${church_id}/add`)}>Add Driver</Button>
-          </Grid.Column>
-        </Grid.Row>
-
-        {/* Row */}
-        <Grid.Row centered={true}>
-          <Grid.Column width={14} computer={12} widescreen={8}>
-            {this.renderDrivers()}
-          </Grid.Column>
-        </Grid.Row>
-
-      </Grid>
+      <div style={{ overflow: 'auto' }}>
+        {_.isEmpty(drivers)
+          ? (
+            <p>
+              Whoa! It looks like there are no drivers headed to
+              {churchName ? churchName : 'a church'} this week.
+              Add a new driver if you'd like.
+            </p>
+          )
+          : (
+            <p>
+              Add to, or edit the list of drivers headed to
+              {churchName ? churchName : 'a church'} this week.
+            </p>
+          )
+        }
+      </div>
     );
   }
 
+  renderPrimaryButtons() {
+    const { push } = this.props.history;
+    const { church_id } = this.props.match.params;
+    const { showAll } = this.state;
+    return (
+      <div>
+        <Button
+          floated="right"
+          onClick={() => this.setState({ showAll: !showAll })}
+        >
+          {showAll === false ? 'Show All Riders' : 'Hide Riders'}
+        </Button>
+        <Button
+          floated="right"
+          primary
+          onClick={(e) => push(`/drivers/${church_id}/add`)}
+        >
+          Add Driver
+    </Button>
+      </div>
+    );
+  }
+
+  renderConfirm() {
+    const { firstName, open } = this.state;
+    const confirmContent = `Are you sure you want to delete ${firstName}?`;
+    return (
+      <Confirm
+          open={open}
+          onCancel={this.handleCancel}
+          onConfirm={this.handleConfirm}
+          content={confirmContent}
+        />
+    );
+  }
+
+  render() {
+    // console.log('state:', this.state, 'props:', this.props, 'DriversPage');
+    const message = this.renderMessage();
+    const primaryButtons = this.renderPrimaryButtons();
+    const confirm = this.renderConfirm();
+    const body = this.renderDrivers();
+    return (
+      <AppGrid
+        confirm={confirm}
+        message={message}
+        primaryButtons={primaryButtons}
+        body={body}
+      />
+    );
+  }
 };
 
 export default sizeMe()(DriversPage);
-
-
-// Older method for rendering Drivers: 
-  // renderDrivers() {
-  //   const drivers = this.state.drivers;
-  //   const church_id = this.props.match.params.church_id;
-  //   const driversList = drivers.map((driver, index) => {
-  //     const riders = [];
-  //     const keys = Object.keys(driver);
-  //     // Determine if riders exist in the drivers object
-  //     if (keys.includes('riders')) {
-  //       _.forEach(driver.riders, (value, key) => {
-  //         const rider = {};
-  //         const fullName = value.firstName + ' ' + value.lastName;
-  //         rider.name = fullName;
-  //         rider.id = key;
-  //         riders.push(rider);
-  //       });
-  //     };
-  //     // Return a list of drivers from Google Firebase
-  //     return (
-  //         <Panel key={driver.id} eventKey={index}>
-  //           <Panel.Heading>
-  //             <Panel.Title toggle >
-  //               <div className="driver_header_wrapper">
-  //                 <p>{driver.firstName} {driver.lastName}</p>
-  //                 <div>
-  //                   <Link to={`/drivers/${church_id}/add_rider/${driver.id}`} className="driver_header_button">Ride</Link>
-  //                   <Link to={`/drivers/${church_id}/edit/${driver.id}`} className="driver_header_button">Edit</Link>
-  //                   <p onClick={(e) => this.onDelete(driver.id, e)} className="driver_header_button delete-button">Delete Driver</p>
-  //                 </div>
-  //               </div>
-  //             </Panel.Title>
-  //           </Panel.Heading>
-  //           <Panel.Body collapsible>
-  //             <p>Seats Left: {driver.seatsAvailable}</p>
-  //             <p>Riders: {_.isEmpty(riders) ? "There are no riders" : this.renderRiders(riders, church_id, driver.id)}</p>
-  //           </Panel.Body>
-  //         </Panel>
-  //     );
-  //   });
-  //   return driversList;
-  // }

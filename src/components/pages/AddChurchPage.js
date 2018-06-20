@@ -4,6 +4,7 @@ import {
   Segment, Container, Header,
   Form
 } from 'semantic-ui-react';
+import AppGrid from './AppGrid';
 import ChurchForm from '../common/ChurchForm';
 import database from '../../firebase/firebase';
 
@@ -33,32 +34,17 @@ export default class AddChurchPage extends React.Component {
   }
 
   render() {
-    console.log(this.state, 'state', this.props, 'props', 'AddChurchPage');
-    
+    // console.log('state:', this.state, 'props:', this.props, 'AddChurchPage');
+    const message = <p>Add a church below...</p>;
+    const body = (
+      <ChurchForm
+        church={this.state.church}
+        onChurchNameChange={this.handleChange}
+        onChurchNameSubmit={this.handleSubmit}
+      />
+    );
     return (
-      <Grid>
-
-        {/* Row */}
-        <Grid.Row centered={true}>
-          <Grid.Column width={14} computer={12} widescreen={8}>
-            <Message color="blue">
-              <p>Add a church below...</p>
-            </Message>
-          </Grid.Column>
-        </Grid.Row>
-
-        {/* Row */}
-        <Grid.Row centered={true}>
-          <Grid.Column width={14} computer={12} widescreen={8}>
-            <ChurchForm
-              church={this.state.church}
-              onChurchNameChange={this.handleChange}
-              onChurchNameSubmit={this.handleSubmit}
-            />
-          </Grid.Column>
-        </Grid.Row>
-
-      </Grid>
+      <AppGrid message={message} body={body} />
     );
   };
 };

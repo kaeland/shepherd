@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, Grid, Message } from 'semantic-ui-react';
+import { Grid, Message } from 'semantic-ui-react';
 
 export const NotFoundPage = () => {
   return (

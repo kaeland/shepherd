@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Grid, Message, Button,
-  Segment, Container, Header
+  Button,
+  Segment 
 } from 'semantic-ui-react';
+import AppGrid from './AppGrid';
 import sizeMe from 'react-sizeme'
 import database from '../../firebase/firebase';
 import _ from 'lodash';
@@ -32,31 +33,6 @@ class ChurchesPage extends React.Component {
     });
   }
 
-  // renderChurches() {
-  //   const churches = ['Blueprint', 'Conerstone', 'Gospel Hope'];
-  //   const churchList = this.state.churches.map((church) => {
-  //     return (
-  //       <Panel key={church.id}>
-  //         <Panel.Heading>
-  //           <Panel.Title>
-  //             <div className="driver_header_wrapper">
-  //               <p style={{ marginTop: '10px' }}>{church.name}</p>
-  //               <div>
-  //                 <Link to={`/drivers/${church.id}`}>
-  //                   <Button className="driver_header_button">Find Rides</Button>
-  //                 </Link>
-  //                 <Link to={`/edit/church/${church.id}`}>
-  //                   <Button className="driver_header_button">Edit</Button>
-  //                 </Link>
-  //               </div>
-  //             </div>
-  //           </Panel.Title>
-  //         </Panel.Heading>
-  //       </Panel>
-  //     );
-  //   });
-  //   return churchList;
-  // }
 
   renderChurches() {
     const churchList = this.state.churches.map(({ name, id }) => {
@@ -80,44 +56,33 @@ class ChurchesPage extends React.Component {
     return churchList;
   }
 
+  renderMessage() {
+    return ( _.isEmpty(this.state.churches)
+    ? (
+      <p>
+        Welcome to Shepherd! Use the button below to add the
+        church you attend to the Shepherd database.
+      </p>
+    )
+    : <p>Find a ride with the churches below...</p>
+    );
+  }
+
   render() {
     const { push } = this.props.history;
-
-
+    const message = this.renderMessage();
+    const primaryButtons = (
+      <Button primary floated="right" onClick={(e) => push(`/add/church`)}>
+        Add
+      </Button>
+    );
     return (
-      <Grid>
-        {/* Row */}
-        <Grid.Row centered={true}>
-          <Grid.Column width={14} computer={12} widescreen={8}>
-            <Message color="blue">
-              {_.isEmpty(this.state.churches)
-                ? (
-                  <p>
-                    Welcome to Shepherd! Use the button below to add the
-                    church you attend to the Shepherd database.
-                </p>
-                )
-                : <p>Find a ride with the churches below...</p>
-              }
-            </Message>
-          </Grid.Column>
-        </Grid.Row>
-
-        {/* Row */}
-        <Grid.Row centered={true}>
-          <Grid.Column width={14} computer={12} widescreen={8}>
-            <Button primary floated="right" onClick={(e) => push(`/add/church`)}>Add</Button>
-          </Grid.Column>
-        </Grid.Row>
-
-        {/* Row */}
-        <Grid.Row centered={true}>
-          <Grid.Column width={14} computer={12} widescreen={8}>
-            {this.renderChurches()}
-          </Grid.Column>
-        </Grid.Row>
-
-      </Grid>
+      <AppGrid 
+        message={message}
+        messageColor="blue"
+        primaryButtons={primaryButtons}
+        body={this.renderChurches()}
+      />
     );
   }
 }

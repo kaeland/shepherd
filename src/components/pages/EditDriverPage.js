@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-  Grid, Message, Button,
-  Segment, Container, Header,
+  Button,
   Form
 } from 'semantic-ui-react';
+import AppGrid from './AppGrid';
 import database from '../../firebase/firebase';
 
 class EditDriverPage extends React.Component {
@@ -93,53 +93,74 @@ class EditDriverPage extends React.Component {
     });
   }
 
-  render() {
+  renderForm() {
     const { firstName, lastName, seatsAvailable, make, model, color } = this.state;
-
     return (
-      <Grid>
+      <Form onSubmit={this.handleSubmit}>
+        <Form.Field>
+          <label>First Name</label>
+          <input
+            placeholder="First Name"
+            type="text"
+            value={firstName}
+            onChange={this.onFirstNameChange}
+          />
+        </Form.Field>
 
-        {/* Row */}
-        <Grid.Row centered={true}>
-          <Grid.Column width={14} computer={12} widescreen={8}>
-            <Message color="blue">
-              <p>Edit a driver below...</p>
-            </Message>
-          </Grid.Column>
-        </Grid.Row>
+        <Form.Field>
+          <label>Last Name</label>
+          <input
+            placeholder="Last Name"
+            type="text"
+            value={lastName}
+            onChange={this.onLastNameChange}
+          />
+        </Form.Field>
 
-        {/* Row */}
-        <Grid.Row centered={true}>
-          <Grid.Column width={14} computer={12} widescreen={8}>
-            <Form onSubmit={this.handleSubmit}>
+        <Form.Field>
+          <label>Seats Available</label>
+          <input
+            placeholder="Seats Available"
+            type="text"
+            value={seatsAvailable}
+            onChange={this.onSeatsAvailable}
+          />
+        </Form.Field>
 
-              <Form.Field>
-                <label>First Name</label>
-                <input placeholder="First Name" type="text" value={firstName} onChange={this.onFirstNameChange} />
-              </Form.Field>
+        <Form.Group widths='equal'>
+          <Form.Input
+            fluid
+            label='Car Color'
+            placeholder='Car Color'
+            value={color}
+            onChange={this.onColorChange}
+          />
+          <Form.Input
+            fluid
+            label='Car Make'
+            placeholder='Car Make'
+            value={make}
+            onChange={this.onMakeChange}
+          />
+          <Form.Input
+            fluid
+            label='Car Model'
+            placeholder='Car Model'
+            value={model}
+            onChange={this.onModelChange}
+          />
+        </Form.Group>
 
-              <Form.Field>
-                <label>Last Name</label>
-                <input placeholder="Last Name" type="text" value={lastName} onChange={this.onLastNameChange} />
-              </Form.Field>
+        <Button type="submit" primary>Add</Button>
+      </Form>
+    );
+  }
 
-              <Form.Field>
-                <label>Seats Available</label>
-                <input placeholder="Seats Available" type="text" value={seatsAvailable} onChange={this.onSeatsAvailable} />
-              </Form.Field>
-
-              <Form.Group widths='equal'>
-                <Form.Input fluid label='Car Make' placeholder='Car Make' value={make} onChange={this.onMakeChange} />
-                <Form.Input fluid label='Car Model' placeholder='Car Model' value={model} onChange={this.onModelChange} />
-                <Form.Input fluid label='Car Color' placeholder='Car Color' value={color} onChange={this.onColorChange} />
-              </Form.Group>
-
-              <Button type="submit" primary>Add</Button>
-            </Form>
-          </Grid.Column>
-        </Grid.Row>
-
-      </Grid>
+  render() {
+    const message = <p>Edit a driver below...</p>;
+    const body = this.renderForm();
+    return (
+      <AppGrid message={message} body={body} />
     );
   }
 }
